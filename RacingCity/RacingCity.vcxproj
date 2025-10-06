@@ -124,26 +124,37 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
+    <ClInclude Include="Background.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="ComputerCar.h" />
+    <ClInclude Include="ComputerCarSpawner.h" />
     <ClInclude Include="enums.h" />
     <ClInclude Include="Factory.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="PhysicsComponent.h" />
+    <ClInclude Include="PlayerCar.h" />
     <ClInclude Include="RacingCity.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TimerUI.h" />
+    <ClInclude Include="UserInterface.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
-    <ClCompile Include="enums.cpp" />
+    <ClCompile Include="Background.cpp" />
+    <ClCompile Include="ComputerCar.cpp" />
+    <ClCompile Include="ComputerCarSpawner.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />
+    <ClCompile Include="PlayerCar.cpp" />
     <ClCompile Include="RacingCity.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="TimerUI.cpp" />
+    <ClCompile Include="UserInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RacingCity.rc" />

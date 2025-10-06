@@ -24,15 +24,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="RacingCity.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -63,12 +54,36 @@
     <ClInclude Include="Singleton.h">
       <Filter>매니저</Filter>
     </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>리소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>리소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>리소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputerCar.h">
+      <Filter>객체</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerCar.h">
+      <Filter>객체</Filter>
+    </ClInclude>
+    <ClInclude Include="Background.h">
+      <Filter>객체</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputerCarSpawner.h">
+      <Filter>객체</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerUI.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RacingCity.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="enums.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsComponent.cpp">
@@ -82,6 +97,24 @@
     </ClCompile>
     <ClCompile Include="GameManager.cpp">
       <Filter>매니저</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputerCar.cpp">
+      <Filter>객체</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerCar.cpp">
+      <Filter>객체</Filter>
+    </ClCompile>
+    <ClCompile Include="Background.cpp">
+      <Filter>객체</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputerCarSpawner.cpp">
+      <Filter>객체</Filter>
+    </ClCompile>
+    <ClCompile Include="TimerUI.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

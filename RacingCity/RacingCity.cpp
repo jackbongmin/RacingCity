@@ -1,8 +1,12 @@
-﻿// RacingCity.cpp : 애플리케이션에 대한 진입점을 정의합니다.
+﻿// Shooting2D.cpp : 애플리케이션에 대한 진입점을 정의합니다.
 //
 
 #include "framework.h"
 #include "RacingCity.h"
+
+//#include <crtdbg.h>
+//#define _CRTDBG_MAP_ALLOC
+//#define new new(_NORMAL_BLOCK, __FILE__, __LINE__)
 
 #define MAX_LOADSTRING 100
 
@@ -18,22 +22,31 @@ LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-                     _In_opt_ HINSTANCE hPrevInstance,
-                     _In_ LPWSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
+    _In_opt_ HINSTANCE hPrevInstance,
+    _In_ LPWSTR    lpCmdLine,
+    _In_ int       nCmdShow)
 {
-    UNREFERENCED_PARAMETER(hPrevInstance);
+    UNREFERENCED_PARAMETER(hPrevInstance);  // 사용 안하는 파라메터 명시적으로 표시
     UNREFERENCED_PARAMETER(lpCmdLine);
 
     // TODO: 여기에 코드를 입력합니다.
+    //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
+    // GDI+ 초기화
+    ULONG_PTR Token;
+    Gdiplus::GdiplusStartupInput StartupInput;
+    Gdiplus::GdiplusStartup(&Token, &StartupInput, nullptr);
+
+    ResourceManager::Get().Initialize();    // GameManager보다 먼저 초기화 되어야 함
+    GameManager::Get().Initialize();
 
     // 전역 문자열을 초기화합니다.
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_RACINGCITY, szWindowClass, MAX_LOADSTRING);
-    MyRegisterClass(hInstance);
+    MyRegisterClass(hInstance);                 // 1. 윈도우 클래스 등록
 
     // 애플리케이션 초기화를 수행합니다:
-    if (!InitInstance (hInstance, nCmdShow))
+    if (!InitInstance(hInstance, nCmdShow))    // 2. 윈도우 실제 생성 및 초기화
     {
         return FALSE;
     }
@@ -41,21 +54,41 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_RACINGCITY));
 
     MSG msg;
+    ULONGLONG LastTime = GetTickCount64();
 
-    // 기본 메시지 루프입니다:
-    while (GetMessage(&msg, nullptr, 0, 0))
+    // 3. 메시지 루프
+    // 기본 메시지 루프입니다:(메세지 큐에 들어온 메세지들을 하나씩 처리하는 부분)
+    while (true)
     {
-        if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
         {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
+            if (msg.message == WM_QUIT) // 종료 메시지가 나오면 그냥 종료
+                break;
+
+            if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg)) // 단축키 처리
+            {
+                TranslateMessage(&msg); // 메시지를 메시지 프로시저로 보내 메시지를 처리한다.
+                DispatchMessage(&msg);
+            }
         }
+
+        ULONGLONG CurrentTime = GetTickCount64();
+        float DeltaTime = (CurrentTime - LastTime) / 1000.0f;   // 결과를 초 단위로 변경
+        LastTime = CurrentTime;
+
+        GameManager::Get().Tick(DeltaTime);
+
+        InvalidateRect(GameManager::Get().GetMainWindowHandle(),
+            nullptr, FALSE); // 매 프레임마다 WM_PAINT요청
     }
 
-    return (int) msg.wParam;
+    GameManager::Get().Destroy();
+    ResourceManager::Get().Destroy();
+
+    // GDI+ 정리하기
+    Gdiplus::GdiplusShutdown(Token);
+    return (int)msg.wParam;
 }
-
-
 
 //
 //  함수: MyRegisterClass()
@@ -64,21 +97,22 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 //
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
+    // 윈도우의 모양과 기본동작 등을 결정
     WNDCLASSEXW wcex;
 
     wcex.cbSize = sizeof(WNDCLASSEX);
 
-    wcex.style          = CS_HREDRAW | CS_VREDRAW;
-    wcex.lpfnWndProc    = WndProc;
-    wcex.cbClsExtra     = 0;
-    wcex.cbWndExtra     = 0;
-    wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_RACINGCITY));
-    wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_RACINGCITY);
-    wcex.lpszClassName  = szWindowClass;
-    wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+    wcex.style = CS_HREDRAW | CS_VREDRAW;
+    wcex.lpfnWndProc = WndProc;  // 윈도우 프로시저 함수 등록
+    wcex.cbClsExtra = 0;
+    wcex.cbWndExtra = 0;
+    wcex.hInstance = hInstance;
+    wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_RACINGCITY));
+    wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+    wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+    wcex.lpszMenuName = nullptr; // 메뉴 제거
+    wcex.lpszClassName = szWindowClass;
+    wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
     return RegisterClassExW(&wcex);
 }
@@ -95,20 +129,36 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
-   hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
+    hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+    // 클라이언트 영역의 크기를 원하는 크기로 조절하기
+    RECT rc = { 0,0, GameManager::ScreenWidth, GameManager::ScreenHeight };
 
-   if (!hWnd)
-   {
-      return FALSE;
-   }
+    AdjustWindowRectEx(&rc, WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX & ~WS_THICKFRAME, FALSE, 0);
 
-   ShowWindow(hWnd, nCmdShow);
-   UpdateWindow(hWnd);
+    const Point StartPosition = GameManager::Get().GetAppPosition();
 
-   return TRUE;
+    // 실제 윈도우 생성
+    HWND hWnd = CreateWindowW(szWindowClass,
+        L"2D Shooting for GDI+",
+        // WS_OVERLAPPEDWINDOW에서 
+        // WS_MAXIMIZEBOX(최대화 버튼 비활성화)와 WS_THICKFRAME(테두리잡고 크기 변경 금지)만 제외
+        WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX & ~WS_THICKFRAME,
+        StartPosition.X, StartPosition.Y,   // 시작 좌표(스크린 좌표계)
+        rc.right - rc.left, rc.bottom - rc.top,    // 크기(윈도우 스타일에 맞춰 재조정된 크기)
+        nullptr, nullptr, hInstance, nullptr);
+
+    if (!hWnd)
+    {
+        return FALSE;
+    }
+
+    GameManager::Get().SetMainWindowHandle(hWnd);    // 게임메니저에 핸들 설정
+    ShowWindow(hWnd, nCmdShow);  // 윈도우 보여주기
+    UpdateWindow(hWnd);          // 윈도우 업데이트하기(윈도우 화면 갱신)
+
+
+    return TRUE;
 }
 
 //
@@ -125,39 +175,48 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
-    case WM_COMMAND:
-        {
-            int wmId = LOWORD(wParam);
-            // 메뉴 선택을 구문 분석합니다:
-            switch (wmId)
-            {
-            case IDM_ABOUT:
-                DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-                break;
-            case IDM_EXIT:
-                DestroyWindow(hWnd);
-                break;
-            default:
-                return DefWindowProc(hWnd, message, wParam, lParam);
-            }
-        }
+        //case WM_CREATE:
+        //    // 윈도우가 생성되었을때 날아오는 메시지        
+        //    break;
+    case WM_DESTROY:
+        // 윈도우가 삭제되었을 때 날아오는 메세지        
+        PostQuitMessage(0);
         break;
     case WM_PAINT:
+    {
+        PAINTSTRUCT ps;
+        HDC hdc = BeginPaint(hWnd, &ps);
+
+        // TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다...
+        GameManager::Get().Render();
+        Gdiplus::Graphics GraphicsInstance(hdc);    // Graphics객체 만들기(hdc에 그리기 위한 도구 만들기)
+        GraphicsInstance.DrawImage(GameManager::Get().GetBackBuffer(), 0, 0);
+
+        EndPaint(hWnd, &ps);
+    }
+    break;
+    case WM_ERASEBKGND:
+        // 화면을 지워야 할 때 날라온 메시지
+        return 1;   // 배경지우기 방지(백버퍼 사용하고 있기 때문에)
+    case WM_KEYDOWN:
+        GameManager::Get().HandleKeyState(wParam, true);
+        switch (wParam)
         {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다...
-            EndPaint(hWnd, &ps);
+        case VK_ESCAPE:
+            DestroyWindow(hWnd);    // hWnd 창을 닫아라 -> 프로그램을 꺼라(WM_DESTROY메시지가 들어간다.)
         }
         break;
-    case WM_DESTROY:
-        PostQuitMessage(0);
+    case WM_KEYUP:
+        GameManager::Get().HandleKeyState(wParam, false);
         break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
     return 0;
 }
+
+
+
 
 // 정보 대화 상자의 메시지 처리기입니다.
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
