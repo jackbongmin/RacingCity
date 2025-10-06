@@ -19,6 +19,7 @@ void PlayerCar::OnInitialize()
 void PlayerCar::OnTick(float InDeltaTime)
 {
     float MoveDistance = InDeltaTime * Speed;
+    // 좌우 이동
     if (KeyWasPressedMap[InputDirection::Left])
     {
         Position.X -= MoveDistance;
@@ -27,14 +28,32 @@ void PlayerCar::OnTick(float InDeltaTime)
     {
         Position.X += MoveDistance;
     }
+    // 위아래 이동
+    if (KeyWasPressedMap[InputDirection::Up])
+    {
+        Position.Y -= MoveDistance;
+    }
+    if (KeyWasPressedMap[InputDirection::Down])
+    {
+        Position.Y += MoveDistance;
+    }
 
+    // 좌우 위아래 순환 이동
     if (Position.X < (0 - Size * 0.5f))
     {
-        Position.X = GameManager::ScreenWidth + Size * 0.5f; // 순환 이동
+        Position.X = GameManager::ScreenWidth + Size * 0.5f;
     }
     else if ((GameManager::ScreenWidth + Size * 0.5f) < Position.X)
     {
         Position.X = static_cast<float>(0 - Size * 0.5f);
+    }
+    if (Position.Y < Size * 0.5f)
+    {
+        Position.Y = Size * 0.5f;
+    }
+    else if (Position.Y > GameManager::ScreenHeight - Size * 0.5f)
+    {
+        Position.Y = GameManager::ScreenHeight - Size * 0.5f;
     }
 }
 
@@ -66,7 +85,7 @@ void PlayerCar::OnOverlap(Actor* InOther)
 
 void PlayerCar::HandleKeyState(WPARAM InKey, bool InIsPressed)
 {
-    if (InKey == VK_LEFT || InKey == VK_RIGHT)
+    if (InKey == VK_LEFT || InKey == VK_RIGHT || InKey == VK_UP || InKey == VK_DOWN)
     {
         KeyWasPressedMap[static_cast<InputDirection>(InKey)] = InIsPressed;
     }

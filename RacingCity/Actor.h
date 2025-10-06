@@ -6,6 +6,7 @@
 
 class Actor
 {
+public:
 	Actor() = delete;
 	Actor(ResourceID InID);
 	virtual ~Actor() = default;

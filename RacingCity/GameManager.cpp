@@ -20,7 +20,7 @@ void GameManager::Initialize()
     MainPlayer = Factory::Get().SpawnActor<PlayerCar>(ResourceID::PlayerCar, RenderLayer::PlayerCar);
     Factory::Get().SpawnActor<Background>(ResourceID::Background, RenderLayer::Background);
 
-    Spawner = Factory::Get().SpawnActor<BombSpawner>(ResourceID::None);
+    Spawner = Factory::Get().SpawnActor<ComputerCarSpawner>(ResourceID::None);
     Timer = Factory::Get().SpawnActor<TimerUI>(ResourceID::None, RenderLayer::UI);
 }
 

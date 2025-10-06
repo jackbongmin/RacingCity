@@ -32,7 +32,7 @@ void ComputerCarSpawner::OnTick(float deltaTime)
     if (timeSinceLastSpawn > spawnInterval)
     {
         // 폭탄 생성
-        ComputerCarSpawner* newComputerCarSpawner = Factory::Get().SpawnActor<ComputerCarSpawner>(ResourceID::ComputerCarSpawner, RenderLayer::ComputerCarSpawner);
+        ComputerCarSpawner* newComputerCarSpawner = Factory::Get().SpawnActor<ComputerCarSpawner>(ResourceID::ComputerCar, RenderLayer::ComputerCar);
 
         // 타이머 리셋 (다음 스폰 간격을 위해)
         timeSinceLastSpawn -= spawnInterval;
