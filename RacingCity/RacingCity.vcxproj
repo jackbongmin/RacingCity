@@ -164,6 +164,8 @@
     <ResourceCompile Include="RacingCity.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\..\downloads\icon2.ico" />
+    <Image Include="..\..\..\..\..\Downloads\RacingCityIcon.ico" />
     <Image Include="RacingCity.ico" />
     <Image Include="small.ico" />
   </ItemGroup>

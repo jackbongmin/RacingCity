@@ -144,5 +144,11 @@
     <Image Include="RacingCity.ico">
       <Filter>리소스 파일</Filter>
     </Image>
+    <Image Include="..\..\..\..\..\Downloads\RacingCityIcon.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\downloads\icon2.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
   </ItemGroup>
 </Project>
