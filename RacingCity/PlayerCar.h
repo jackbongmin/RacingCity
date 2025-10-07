@@ -23,12 +23,13 @@ public:
 	inline int GetLife() const { return Life; }
 
 private:
-	// 플레이어의 이동 속도
+	// 이동 속도
 	float Speed = 250.0f;
 
-	// 플레이어 키 입력 상태
+	// 키 입력
 	std::unordered_map<InputDirection, bool> KeyWasPressedMap;
 
+	// 목숨
 	int Life = 3;
 	bool IsInvincible = false;
 	float InvincibleTimer = 0.0f;

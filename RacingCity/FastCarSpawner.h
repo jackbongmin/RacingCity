@@ -12,6 +12,6 @@ public:
 
 private:
     float SpawnInterval = 2.5f;       // 2.5초마다 스폰
-    float TimeSinceLastSpawn = 0.0f;  // 경과 시간
-    float TotalElapsed = 0.0f;        // 전체 경과 시간 (10초 이후부터 스폰)
+    float TimeSinceLastSpawn = 0.0f;  
+    float TotalElapsed = 0.0f;       
 };

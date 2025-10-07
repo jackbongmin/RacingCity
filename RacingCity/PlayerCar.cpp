@@ -41,7 +41,7 @@ void PlayerCar::OnTick(float InDeltaTime)
         {
             IsExploding = false;
         }
-        return; // 폭발 중엔 플레이어 이동/입력 처리 X
+        return;
     }
 
     float MoveDistance = InDeltaTime * Speed;
@@ -98,11 +98,11 @@ void PlayerCar::OnRender(Gdiplus::Graphics* InGraphics)
     if (IsInvincible)
     {
         int Blink = static_cast<int>(InvincibleTimer * 10) % 2;
-        if (Blink == 0) return; // 그릴 타이밍이 아니면 skip
+        if (Blink == 0) return; 
     }
-    Actor::OnRender(InGraphics);    // 부모의 OnRender 실행
+    Actor::OnRender(InGraphics);    
 
-    // 부모의 OnRender 실행한 후 추가로 동작 실행
+ 
     if (!Image)
     {
         Gdiplus::SolidBrush RedBrush(Gdiplus::Color(255, 255, 0, 0));
@@ -123,8 +123,7 @@ void PlayerCar::OnOverlap(Actor* InOther)
     if (InOther && InOther != this)
     {
         LoseLife();
-        // 게임 오버 처리
-        //GameManager::Get().SetGameState(GameState::GameOver);
+
     }
 }
 
@@ -141,10 +140,10 @@ void PlayerCar::LoseLife()
 {
     if (IsExploding || IsInvincible) return;
 
-    Life--;
-    IsExploding = true;      // 폭발 시작
+    Life--; 
+    IsExploding = true;       // 폭발
     ExplosionTimer = 0.5f;    // 1초 동안 폭발 이미지 유지
-    IsInvincible = true;     // 무적 시작
+    IsInvincible = true;      // 무적
     InvincibleTimer = 1.5f;   // 2초 동안 무적
 
     if (Life > 0)

@@ -14,8 +14,6 @@ public:
 	Gdiplus::Bitmap* GetImage(ResourceID InID);
 
 private:
-	// Singleton : 클래스의 인스턴스가 1개만 있는 클래스. 
-	// private에 생성자를 넣어서 밖에서 인스턴스화 하는 것을 원천적으로 봉쇄
 	ResourceManager() = default;
 	virtual ~ResourceManager() = default;
 

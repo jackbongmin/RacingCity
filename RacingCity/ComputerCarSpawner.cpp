@@ -19,10 +19,10 @@ void ComputerCarSpawner::OnTick(float deltaTime)
     timeSinceLastSpawn += deltaTime;
 
     static float TotalElapsed = 0.0f;  // 전체 플레이 시간 누적
-    static float LastDifficultyUpdate = 0.0f; // 마지막 난이도 갱신 시점
+    static float LastDifficultyUpdate = 0.0f;
     TotalElapsed += deltaTime;
 
-    //10초마다 스폰 속도 조절
+    //4초마다 스폰 속도 조절
     if (TotalElapsed - LastDifficultyUpdate >= 4.0f)
     {
         // 스폰 주기를 0.05초 줄이되, 0.15초보다 작아지지 않게 고정
@@ -59,7 +59,7 @@ void ComputerCarSpawner::OnTick(float deltaTime)
 
         newComputerCar->SetPosition(spawnX, spawnY);
 
-        // 차마다 다른 랜덤 속도 부여 (-350 ~ -550)
+        //랜덤 속도(-350 ~ -550)
         float randomSpeed = -400.0f - static_cast<float>(rand() % 150);
         newComputerCar->SetSpeed(randomSpeed);
 

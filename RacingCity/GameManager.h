@@ -12,11 +12,9 @@
 #include "FastCarSpawner.h"
 #include "TimerUI.h"
 
-// 게임내 모든 액터를 관리해줄 클래스
+
 class GameManager : public Singleton<GameManager>
 {
-	// friend : 다른 클래스가 자신의 private/protected 항목에 접근하는 것을 허용해준다.
-	// Singleton<GameManager>가 GameManager의 private에 접근 가능해진다.
 	friend class Singleton<GameManager>;
 
 public:
@@ -45,7 +43,7 @@ public:
 	inline void SetMainWindowHandle(HWND InWindowHandle) {
 		if (hMainWindow == nullptr)
 		{
-			hMainWindow = InWindowHandle;	// 딱 한번만 설정할 수 있는 세터
+			hMainWindow = InWindowHandle;	
 		}
 	}
 	inline void SetGameState(GameState InState) { State = InState; }

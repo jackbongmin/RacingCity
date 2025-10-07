@@ -13,8 +13,6 @@ void ComputerCar::OnInitialize()
     Position.X = static_cast<float>(GameManager::ScreenWidth + Size);
     Position.Y = spawnY;
 
-    //Angle = 180.0f; // 왼쪽 방향
-
     // 물리 충돌 박스 설정
     float HalfSize = Size * 0.5f;
     PhysicsComponent* physicsComponent =

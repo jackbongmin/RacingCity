@@ -20,13 +20,6 @@ void GameManager::Initialize()
 
     IntroImage = ResourceManager::Get().GetImage(ResourceID::Intro);
 
-    //MainPlayer = Factory::Get().SpawnActor<PlayerCar>(ResourceID::PlayerCar, RenderLayer::PlayerCar);
-    //Factory::Get().SpawnActor<Background>(ResourceID::Background, RenderLayer::Background);
-    //Factory::Get().SpawnActor<LifeUI>(ResourceID::None, RenderLayer::UI);
-
-    //Spawner = Factory::Get().SpawnActor<ComputerCarSpawner>(ResourceID::None);
-    //Factory::Get().SpawnActor<FastCarSpawner>(ResourceID::None);
-    //Timer = Factory::Get().SpawnActor<TimerUI>(ResourceID::None, RenderLayer::UI);
     GameOverImage = ResourceManager::Get().GetImage(ResourceID::GameOver);
 
     State = GameState::Intro;
@@ -122,7 +115,7 @@ void GameManager::Render()
             // 화면 크기에 맞게 변경
             float scaleX = static_cast<float>(ScreenWidth) / imgW;
             float scaleY = static_cast<float>(ScreenHeight) / imgH;
-            float scale = min(scaleX, scaleY) * 0.75f; // 게임오버 파일 너무커서 크기 변경
+            float scale = min(scaleX, scaleY) * 0.75f; // 크기조정
 
             int drawW = static_cast<int>(imgW * scale);
             int drawH = static_cast<int>(imgH * scale);
