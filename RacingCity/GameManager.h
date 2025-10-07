@@ -9,6 +9,7 @@
 #include "PlayerCar.h"
 #include "Singleton.h"
 #include "ComputerCarSpawner.h"
+#include "FastCarSpawner.h"
 #include "TimerUI.h"
 
 // 게임내 모든 액터를 관리해줄 클래스
@@ -25,6 +26,8 @@ public:
 	void Render();
 	void HandleKeyState(WPARAM InKey, bool InIsPressed);
 
+
+
 	void RegistActor(RenderLayer InLayer, Actor* InActor);
 	inline void RequestDestroy(Actor* DestroyTarget) { PendingDestroyActors.push_back(DestroyTarget); };
 
@@ -36,6 +39,7 @@ public:
 	inline const HWND GetMainWindowHandle() const { return hMainWindow; }
 	inline const Point& GetAppPosition() const { return AppPosition; }
 	inline Gdiplus::Bitmap* GetBackBuffer() const { return BackBuffer; }
+	inline PlayerCar* GetMainPlayer() const { return MainPlayer; }
 
 	// Setter
 	inline void SetMainWindowHandle(HWND InWindowHandle) {
@@ -62,6 +66,10 @@ private:
 	Point AppPosition = Point(200, 100);
 	Gdiplus::Bitmap* BackBuffer = nullptr;    // 백버퍼용 종이
 	Gdiplus::Graphics* BackBufferGraphics = nullptr;  // 백버퍼용 종이에 그리기 위한 도구
+
+	Gdiplus::Bitmap* IntroImage = nullptr;
+
+	Gdiplus::Bitmap* GameOverImage = nullptr;
 
 	PlayerCar* MainPlayer = nullptr;
 	ComputerCarSpawner* Spawner = nullptr;

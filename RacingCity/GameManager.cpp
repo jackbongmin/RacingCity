@@ -1,6 +1,7 @@
 #include "GameManager.h"
 #include "Background.h"
 #include "PlayerCar.h"
+#include "LifeUI.h"
 
 #include "ResourceManager.h"
 #include "Factory.h"
@@ -17,11 +18,27 @@ void GameManager::Initialize()
         MessageBox(hMainWindow, L"백 버퍼 그래픽스 생성 실패", L"오류", MB_OK | MB_ICONERROR);
     }
 
-    MainPlayer = Factory::Get().SpawnActor<PlayerCar>(ResourceID::PlayerCar, RenderLayer::PlayerCar);
-    Factory::Get().SpawnActor<Background>(ResourceID::Background, RenderLayer::Background);
+    IntroImage = ResourceManager::Get().GetImage(ResourceID::Intro);
 
-    Spawner = Factory::Get().SpawnActor<ComputerCarSpawner>(ResourceID::None);
-    Timer = Factory::Get().SpawnActor<TimerUI>(ResourceID::None, RenderLayer::UI);
+    //MainPlayer = Factory::Get().SpawnActor<PlayerCar>(ResourceID::PlayerCar, RenderLayer::PlayerCar);
+    //Factory::Get().SpawnActor<Background>(ResourceID::Background, RenderLayer::Background);
+    //Factory::Get().SpawnActor<LifeUI>(ResourceID::None, RenderLayer::UI);
+
+    //Spawner = Factory::Get().SpawnActor<ComputerCarSpawner>(ResourceID::None);
+    //Factory::Get().SpawnActor<FastCarSpawner>(ResourceID::None);
+    //Timer = Factory::Get().SpawnActor<TimerUI>(ResourceID::None, RenderLayer::UI);
+    GameOverImage = ResourceManager::Get().GetImage(ResourceID::GameOver);
+
+    State = GameState::Intro;
+    if (!IntroImage)
+    {
+        OutputDebugString(L"[IntroImage] 이미지 로드 실패!\n");
+    }
+    else
+    {
+        OutputDebugString(L"[IntroImage] 이미지 로드 성공!\n");
+    }
+
 }
 
 void GameManager::Destroy()
@@ -65,9 +82,29 @@ void GameManager::Tick(float InDeltaTime)
 
 void GameManager::Render()
 {
-    if (BackBufferGraphics)   // g_BackBufferGraphics 필수
+    if (BackBufferGraphics)   
     {
         BackBufferGraphics->Clear(Gdiplus::Color(255, 0, 0, 0));
+
+        if (State == GameState::Intro && IntroImage)
+        {
+            const int imgW = IntroImage->GetWidth();
+            const int imgH = IntroImage->GetHeight();
+
+            // 화면 크기에 맞게 비율 조정
+            float scaleX = static_cast<float>(ScreenWidth) / imgW;
+            float scaleY = static_cast<float>(ScreenHeight) / imgH;
+            float scale = min(scaleX, scaleY); // 비율 유지
+
+            int drawW = static_cast<int>(imgW * scale);
+            int drawH = static_cast<int>(imgH * scale);
+
+            int centerX = (ScreenWidth - drawW) / 2;
+            int centerY = (ScreenHeight - drawH) / 2;
+
+            BackBufferGraphics->DrawImage(IntroImage, centerX, centerY, drawW, drawH);
+            return;
+        }
 
         for (const auto& pair : Actors)
         {
@@ -76,12 +113,58 @@ void GameManager::Render()
                 actor->OnRender(BackBufferGraphics);
             }
         }
+
+        if (State == GameState::GameOver && GameOverImage)
+        {
+            const int imgW = GameOverImage->GetWidth();
+            const int imgH = GameOverImage->GetHeight();
+
+            // 화면 크기에 맞게 변경
+            float scaleX = static_cast<float>(ScreenWidth) / imgW;
+            float scaleY = static_cast<float>(ScreenHeight) / imgH;
+            float scale = min(scaleX, scaleY) * 0.75f; // 게임오버 파일 너무커서 크기 변경
+
+            int drawW = static_cast<int>(imgW * scale);
+            int drawH = static_cast<int>(imgH * scale);
+
+            //  중앙 정렬
+            int centerX = (ScreenWidth - drawW) / 2;
+            int centerY = (ScreenHeight - drawH) / 2;
+
+            //  게임오버 이미지 그리기
+            BackBufferGraphics->DrawImage(
+                GameOverImage,
+                centerX,
+                centerY,
+                drawW,
+                drawH
+            );
+        }
     }
 }
 
 void GameManager::HandleKeyState(WPARAM InKey, bool InIsPressed)
 {
-    MainPlayer->HandleKeyState(InKey, InIsPressed);
+    // 인트로
+    if (State == GameState::Intro)
+    {
+        State = GameState::Playing;
+
+        // 액터들 생성
+        Factory::Get().SpawnActor<Background>(ResourceID::Background, RenderLayer::Background);
+        MainPlayer = Factory::Get().SpawnActor<PlayerCar>(ResourceID::PlayerCar, RenderLayer::PlayerCar);
+        Factory::Get().SpawnActor<LifeUI>(ResourceID::None, RenderLayer::UI);
+        Factory::Get().SpawnActor<ComputerCarSpawner>(ResourceID::None);
+        Factory::Get().SpawnActor<FastCarSpawner>(ResourceID::None);
+        Timer = Factory::Get().SpawnActor<TimerUI>(ResourceID::None, RenderLayer::UI);
+        return;
+    }
+
+    // 플레이 중일 때만 키 먹히게 함
+    if (State == GameState::Playing)
+    {
+        MainPlayer->HandleKeyState(InKey, InIsPressed);
+    }
 }
 
 void GameManager::RegistActor(RenderLayer InLayer, Actor* InActor)
@@ -107,44 +190,26 @@ void GameManager::UnregisteActor(Actor* InActor)
         PhysicsComponent* physicsComponent = InActor->GetComponent<PhysicsComponent>();
         if (physicsComponent)
         {
-            // 물리 컴포넌트 제거
             auto& physicsObjects = PhysicsComponents[physicsComponent->GetLayer()];
             auto it = std::find(physicsObjects.begin(), physicsObjects.end(), physicsComponent);
             if (it != physicsObjects.end())
             {
-                std::swap(*it, physicsObjects.back());	// 마지막 물리 컴포넌트와 스왑
-                physicsObjects.pop_back();				// 마지막 물리 컴포넌트 제거
+                std::swap(*it, physicsObjects.back());
+                physicsObjects.pop_back();				
             }
         }
         actorSet.erase(InActor);
     }
-
-
-    //for (size_t i = 0; i < actorSet.size(); i++)
-    //{
-    //    if (actorSet[i] == InActor)
-    //    {
-    //        if (i < actorSet.size() - 1)//마지막이 아니면
-    //        {
-    //            std::swap(actorSet[i], actorSet.back());
-    //        }
-    //        actorSet.pop_back();
-    //        break;
-    //    }
-    //}
 }
 
 void GameManager::ProcessCollisions()
 {
-    PhysicsComponent* player = *(PhysicsComponents[PhysicsLayer::PlayerCar].begin());	// 플레이어는 1명임
+    PhysicsComponent* player = *(PhysicsComponents[PhysicsLayer::PlayerCar].begin());
 
-    // 플레이어가 모든 폭탄과 충돌하는지만 확인
-    // 확인 할 때는 콜리전 타입에 따라 처리(원과 원, 원과 사각형, 사각형과 사각형 총 3가지 케이스)
     for (auto& bomb : PhysicsComponents[PhysicsLayer::ComputerCar])
     {
-        if (player->IsCollision(bomb)) // 플레이어와 폭탄 간의 충돌 확인
+        if (player->IsCollision(bomb))
         {
-            // 충돌 발생 시 플레이어와 폭탄의 OnOverlap 호출
             player->GetOwner()->OnOverlap(bomb->GetOwner());
             bomb->GetOwner()->OnOverlap(player->GetOwner());
         }

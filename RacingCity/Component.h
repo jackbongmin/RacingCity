@@ -1,6 +1,6 @@
 #pragma once
 
-class Actor;	// 전방선언
+class Actor;
 class Component
 {
 public:
@@ -14,5 +14,5 @@ public:
 	inline Actor* GetOwner() const { return Owner; }
 
 protected:
-	Actor* Owner = nullptr;	// 이 컴포넌트가 들어있는 액터
+	Actor* Owner = nullptr;	
 };

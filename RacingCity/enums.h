@@ -26,6 +26,8 @@ enum class ResourceID : uint8_t
 	None = 0,
 	PlayerCar,
 	ComputerCar,
+	FastCar,
+	Explosion,
 	Background,
 	Number0,
 	Number1,
@@ -38,8 +40,11 @@ enum class ResourceID : uint8_t
 	Number8,
 	Number9,
 	Dot,
-	Test,
-	// 이미지가 추가되면 enum 추가
+	Life3,
+	Life2,
+	Life1,
+	GameOver,
+	Intro,
 };
 
 enum class CollisionType
@@ -57,6 +62,7 @@ enum class PhysicsLayer
 
 enum class GameState
 {
+	Intro,
 	Playing,
 	GameOver
 };

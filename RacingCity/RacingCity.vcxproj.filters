@@ -22,6 +22,9 @@
     <Filter Include="매니저">
       <UniqueIdentifier>{fa2abf1b-0b7e-430d-925e-884154d05493}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Interface">
+      <UniqueIdentifier>{49ee6ec1-e5e1-4eb2-bdd9-f6ab0701f009}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RacingCity.h">
@@ -75,11 +78,17 @@
     <ClInclude Include="ComputerCarSpawner.h">
       <Filter>객체</Filter>
     </ClInclude>
+    <ClInclude Include="LifeUI.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
     <ClInclude Include="TimerUI.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Interface</Filter>
     </ClInclude>
     <ClInclude Include="UserInterface.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="FastCarSpawner.h">
+      <Filter>객체</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -111,10 +120,16 @@
       <Filter>객체</Filter>
     </ClCompile>
     <ClCompile Include="TimerUI.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="LifeUI.cpp">
+      <Filter>Interface</Filter>
     </ClCompile>
     <ClCompile Include="UserInterface.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="FastCarSpawner.cpp">
+      <Filter>객체</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -16,8 +16,11 @@ public:
 
 	void HandleKeyState(WPARAM InKey, bool InIsPressed);
 
+	void LoseLife();
+
 	inline float GetSpeed() const { return Speed; }
 	inline void SetSpeed(float InSpeed) { Speed = InSpeed; }
+	inline int GetLife() const { return Life; }
 
 private:
 	// 플레이어의 이동 속도
@@ -25,4 +28,13 @@ private:
 
 	// 플레이어 키 입력 상태
 	std::unordered_map<InputDirection, bool> KeyWasPressedMap;
+
+	int Life = 3;
+	bool IsInvincible = false;
+	float InvincibleTimer = 0.0f;
+
+	bool IsExploding = false;
+	float ExplosionTimer = 0.0f;
+	Gdiplus::Image* ExplosionImage = nullptr;
+
 };

@@ -131,8 +131,10 @@
     <ClInclude Include="ComputerCarSpawner.h" />
     <ClInclude Include="enums.h" />
     <ClInclude Include="Factory.h" />
+    <ClInclude Include="FastCarSpawner.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="LifeUI.h" />
     <ClInclude Include="PhysicsComponent.h" />
     <ClInclude Include="PlayerCar.h" />
     <ClInclude Include="RacingCity.h" />
@@ -148,7 +150,9 @@
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="ComputerCar.cpp" />
     <ClCompile Include="ComputerCarSpawner.cpp" />
+    <ClCompile Include="FastCarSpawner.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="LifeUI.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="PlayerCar.cpp" />
     <ClCompile Include="RacingCity.cpp" />

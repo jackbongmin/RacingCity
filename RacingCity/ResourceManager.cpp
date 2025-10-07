@@ -6,6 +6,7 @@ void ResourceManager::Initialize()
     Resources[ResourceID::None] = nullptr;
     LoadResourceFromFile(ResourceID::PlayerCar, L"./Images/MainPlayer.png");
     LoadResourceFromFile(ResourceID::ComputerCar, L"./Images/ComputerCar.png");
+    LoadResourceFromFile(ResourceID::FastCar, L"./Images/FastCar.png");
     LoadResourceFromFile(ResourceID::Background, L"./Images/RacingCityMap.png");
     LoadResourceFromFile(ResourceID::Number0, L"./Images/Number0.png");
     LoadResourceFromFile(ResourceID::Number1, L"./Images/Number1.png");
@@ -18,6 +19,12 @@ void ResourceManager::Initialize()
     LoadResourceFromFile(ResourceID::Number8, L"./Images/Number8.png");
     LoadResourceFromFile(ResourceID::Number9, L"./Images/Number9.png");
     LoadResourceFromFile(ResourceID::Dot, L"./Images/Dot.png");
+    LoadResourceFromFile(ResourceID::Explosion, L"./Images/Explosion.png");
+    LoadResourceFromFile(ResourceID::Life3, L"./Images/Life3.png");
+    LoadResourceFromFile(ResourceID::Life2, L"./Images/Life2.png");
+    LoadResourceFromFile(ResourceID::Life1, L"./Images/Life1.png");
+    LoadResourceFromFile(ResourceID::GameOver, L"./Images/GameOver.png");
+    LoadResourceFromFile(ResourceID::Intro, L"./Images/IntroImage.png");
 }
 
 void ResourceManager::Destroy()
