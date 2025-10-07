@@ -4,8 +4,9 @@
 
 void PlayerCar::OnInitialize()
 {
-    Position.X = 300.0f;
-    Position.Y = 700.0f;
+    SetSize(GameManager::ActorDefaultSize / 1.2f);
+    Position.X = 30.0f;
+    Position.Y = 180.0f;
     KeyWasPressedMap[InputDirection::Up] = false;
     KeyWasPressedMap[InputDirection::Down] = false;
     KeyWasPressedMap[InputDirection::Left] = false;
@@ -38,23 +39,21 @@ void PlayerCar::OnTick(float InDeltaTime)
         Position.Y += MoveDistance;
     }
 
-    // 좌우 위아래 순환 이동
-    if (Position.X < (0 - Size * 0.5f))
-    {
-        Position.X = GameManager::ScreenWidth + Size * 0.5f;
-    }
-    else if ((GameManager::ScreenWidth + Size * 0.5f) < Position.X)
-    {
-        Position.X = static_cast<float>(0 - Size * 0.5f);
-    }
-    if (Position.Y < Size * 0.5f)
-    {
-        Position.Y = Size * 0.5f;
-    }
-    else if (Position.Y > GameManager::ScreenHeight - Size * 0.5f)
-    {
-        Position.Y = GameManager::ScreenHeight - Size * 0.5f;
-    }
+    const float RoadTop = 139.0f;   
+    const float RoadBottom = 330.0f; 
+    const float RoadLeft = 30.0f;      
+    const float RoadRight = 380.0f;
+
+    if (Position.Y < RoadTop)
+        Position.Y = RoadTop;
+    else if (Position.Y > RoadBottom)
+        Position.Y = RoadBottom;
+
+    if (Position.X < RoadLeft)
+        Position.X = RoadLeft;
+    else if (Position.X > RoadRight)
+        Position.X = RoadRight;
+
 }
 
 void PlayerCar::OnRender(Gdiplus::Graphics* InGraphics)

@@ -79,7 +79,7 @@ void Actor::RemoveComponent(Component* InComponent)
         if (it != Components.end())
         {
             (*it)->OnDestroy(); // 컴포넌트 파괴 호출
-
+            
             std::swap(*it, Components.back());
             Components.pop_back();   // 스왑 앤 팝 방식으로 컴포넌트 제거
             delete InComponent;

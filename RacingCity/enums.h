@@ -14,8 +14,8 @@ enum class InputDirection : uint8_t
 enum class RenderLayer : uint8_t
 {
 	Background = 0,
-	PlayerCar,
 	ComputerCar,
+	PlayerCar,
 	UI,
 	Heart,
 	Misc

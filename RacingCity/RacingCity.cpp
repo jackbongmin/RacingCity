@@ -137,16 +137,33 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
     AdjustWindowRectEx(&rc, WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX & ~WS_THICKFRAME, FALSE, 0);
 
     const Point StartPosition = GameManager::Get().GetAppPosition();
+    int windowWidth = rc.right - rc.left;
+    int windowHeight = rc.bottom - rc.top;
 
-    // 실제 윈도우 생성
+    // 화면 해상도 가져오기
+    int screenWidth = GetSystemMetrics(SM_CXSCREEN);
+    int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+
+    // 중앙 좌표 계산
+    int startX = (screenWidth - windowWidth) / 2;
+    int startY = (screenHeight - windowHeight) / 2;
+
     HWND hWnd = CreateWindowW(szWindowClass,
-        L"2D Shooting for GDI+",
-        // WS_OVERLAPPEDWINDOW에서 
-        // WS_MAXIMIZEBOX(최대화 버튼 비활성화)와 WS_THICKFRAME(테두리잡고 크기 변경 금지)만 제외
+        L"Racing City", // 타이틀 이름
         WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX & ~WS_THICKFRAME,
-        StartPosition.X, StartPosition.Y,   // 시작 좌표(스크린 좌표계)
-        rc.right - rc.left, rc.bottom - rc.top,    // 크기(윈도우 스타일에 맞춰 재조정된 크기)
+        startX, startY,                 // 👈 중앙 정렬된 좌표
+        windowWidth, windowHeight,
         nullptr, nullptr, hInstance, nullptr);
+
+    //// 실제 윈도우 생성
+    //HWND hWnd = CreateWindowW(szWindowClass,
+    //    L"2D Shooting for GDI+",
+    //    // WS_OVERLAPPEDWINDOW에서 
+    //    // WS_MAXIMIZEBOX(최대화 버튼 비활성화)와 WS_THICKFRAME(테두리잡고 크기 변경 금지)만 제외
+    //    WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX & ~WS_THICKFRAME,
+    //    StartPosition.X, StartPosition.Y,   // 시작 좌표(스크린 좌표계)
+    //    rc.right - rc.left, rc.bottom - rc.top,    // 크기(윈도우 스타일에 맞춰 재조정된 크기)
+    //    nullptr, nullptr, hInstance, nullptr);
 
     if (!hWnd)
     {

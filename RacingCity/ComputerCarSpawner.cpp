@@ -1,40 +1,49 @@
 #include "ComputerCarSpawner.h"
 #include "Factory.h"
 #include "ComputerCar.h"
+#include "GameManager.h"
 
 void ComputerCarSpawner::OnInitialize()
 {
-    SetPosition(0, -100); // 화면 밖에 위치 설정. 중요한건 아님.
-
+    SetPosition(0, -100);
     timeSinceLastSpawn = 0.0f;
     hasInitialDelayPassed = false;
 }
 
 void ComputerCarSpawner::OnTick(float deltaTime)
 {
-    Actor::OnTick(deltaTime); // 부모 클래스의 OnTick 호출
-
-    // 경과 시간 업데이트
+    Actor::OnTick(deltaTime);
     timeSinceLastSpawn += deltaTime;
 
-    // 초기 지연 시간이 지났는지 확인
     if (!hasInitialDelayPassed)
     {
         if (timeSinceLastSpawn > initialDelay)
         {
             hasInitialDelayPassed = true;
-            timeSinceLastSpawn = 0.0f; // 타이머 리셋
+            timeSinceLastSpawn = 0.0f;
         }
-        return; // 초기 지연 시간이 지나지 않았으면 여기서 종료
+        return;
     }
 
-    // 초기 지연 시간이 지난 후의 폭탄 생성 로직
     if (timeSinceLastSpawn > spawnInterval)
     {
-        // 폭탄 생성
-        ComputerCarSpawner* newComputerCarSpawner = Factory::Get().SpawnActor<ComputerCarSpawner>(ResourceID::ComputerCar, RenderLayer::ComputerCar);
+        //  Y 범위 (도로 영역)
+        float spawnY = 139.0f + static_cast<float>(rand() % 191);
+        // 오른쪽 화면 바깥 X
+        float spawnX = static_cast<float>(GameManager::ScreenWidth + 100.0f);
 
-        // 타이머 리셋 (다음 스폰 간격을 위해)
+        //  ComputerCar 생성
+        ComputerCar* newComputerCar = Factory::Get().SpawnActor<ComputerCar>(
+            ResourceID::ComputerCar, RenderLayer::ComputerCar);
+
+        newComputerCar->SetPosition(spawnX, spawnY);
+
+        // 차마다 다른 랜덤 속도 부여 (-200 ~ -350)
+        float randomSpeed = -350.0f - static_cast<float>(rand() % 150);
+        newComputerCar->SetSpeed(randomSpeed);
+
+
+        // 다음 스폰 준비
         timeSinceLastSpawn -= spawnInterval;
     }
 }

@@ -12,7 +12,7 @@ public:
 
 private:
 	// 스크롤 속도
-	float ScrollSpeed = 50.0f;
+	float ScrollSpeed = 500.0f;
 
 	// 스크롤 오프셋 값
 	float Offset = 0.0f;

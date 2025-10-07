@@ -4,9 +4,9 @@
 void ResourceManager::Initialize()
 {
     Resources[ResourceID::None] = nullptr;
-    LoadResourceFromFile(ResourceID::PlayerCar, L"./Images/Airplane.png");
-    LoadResourceFromFile(ResourceID::ComputerCar, L"./Images/Bomb.png");
-    LoadResourceFromFile(ResourceID::Background, L"./Images/Background.png");
+    LoadResourceFromFile(ResourceID::PlayerCar, L"./Images/MainPlayer.png");
+    LoadResourceFromFile(ResourceID::ComputerCar, L"./Images/ComputerCar.png");
+    LoadResourceFromFile(ResourceID::Background, L"./Images/RacingCityMap.png");
     LoadResourceFromFile(ResourceID::Number0, L"./Images/Number0.png");
     LoadResourceFromFile(ResourceID::Number1, L"./Images/Number1.png");
     LoadResourceFromFile(ResourceID::Number2, L"./Images/Number2.png");

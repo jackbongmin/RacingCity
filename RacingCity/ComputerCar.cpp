@@ -1,58 +1,50 @@
 #include "ComputerCar.h"
 #include "GameManager.h"
 #include "PhysicsComponent.h"
-//#include <string>
 
 void ComputerCar::OnInitialize()
 {
-	dropSpeed = 0.0f; // 초기 드랍 속도 설정
+    SetSize(GameManager::ActorDefaultSize / 1.2f);
 
-	SetSize(GameManager::ActorDefaultSize / 2); // 크기 설정
+    // 도로 위의 랜덤 Y 위치 (111~252)
+    float spawnY = 111.0f + static_cast<float>(rand() % 142);
 
-	float HalfSize = Size * 0.5f;
-	Position.X = static_cast<float>(HalfSize + rand() % (GameManager::ScreenWidth - Size)); // 랜덤 X 위치 설정
-	Position.Y = static_cast<float>(-Size); // 화면 위쪽에서 시작
+    // 오른쪽 화면 밖에서 시작
+    Position.X = static_cast<float>(GameManager::ScreenWidth + Size);
+    Position.Y = spawnY;
 
-	//std::string debugMessage = "Bomb::position.X : " + std::to_string(position.X) + "\n";
-	//OutputDebugStringA(debugMessage.c_str());
+    //Angle = 180.0f; // 왼쪽 방향
 
-	Angle = 180.0f;	// 회전 설정
-
-	PhysicsComponent* physicsComponent = new PhysicsComponent(this, CollisionType::Rectangle, PhysicsLayer::ComputerCar);
-	physicsComponent->SetWidth(static_cast<float>(HalfSize));
-	physicsComponent->SetHeight(HalfSize * 0.75f);
-	AddComponent(physicsComponent); // 물리 컴포넌트 추가
+    // 물리 충돌 박스 설정
+    float HalfSize = Size * 0.5f;
+    PhysicsComponent* physicsComponent =
+        new PhysicsComponent(this, CollisionType::Rectangle, PhysicsLayer::ComputerCar);
+    physicsComponent->SetWidth(HalfSize);
+    physicsComponent->SetHeight(HalfSize * 0.75f);
+    AddComponent(physicsComponent);
 }
 
 void ComputerCar::OnTick(float deltaTime)
 {
-	Actor::OnTick(deltaTime); // 부모 클래스의 OnTick 호출
+    Actor::OnTick(deltaTime);
 
-	dropSpeed += dropAcceleration * deltaTime; // 드랍 속도 업데이트
-	//std::string debugMessage = "Bomb::OnTick called with deltaTime: " + std::to_string(dropSpeed) + "\n";
-	//OutputDebugStringA(debugMessage.c_str());
+    // 일정한 속도로 왼쪽 이동
+    Position.X += moveSpeed * deltaTime;
 
-	Position.Y += dropSpeed * deltaTime; // Y 위치 업데이트
+    // 수명 감소
+    lifetime -= deltaTime;
 
-	lifetime -= deltaTime; // 수명 감소
-
-	// 화면 밖으로 나가거나 수명이 다 된 경우 액터 삭제
-	if (Position.Y > GameManager::ScreenHeight + Size || lifetime < 0.0f)
-	{
-		DestroyActor();
-	}
+    // 왼쪽 화면 밖으로 벗어나거나 수명 만료 시 삭제
+    if (Position.X < -Size || lifetime < 0.0f)
+    {
+        DestroyActor();
+    }
 }
 
 void ComputerCar::OnOverlap(Actor* other)
 {
-	if (other && other != this)
-	{
-		// 폭탄과 다른 액터가 겹칠 때 처리
-		// 예: 폭탄이 플레이어와 겹치면 플레이어에게 피해를 주거나 게임 오버 처리
-		OutputDebugString(L"Bomb::OnOverlap called\n");
-
-		// 폭탄 삭제
-		DestroyActor();
-	}
+    if (other && other != this)
+    {
+        DestroyActor();
+    }
 }
-

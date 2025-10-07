@@ -29,7 +29,7 @@ public:
 	inline void RequestDestroy(Actor* DestroyTarget) { PendingDestroyActors.push_back(DestroyTarget); };
 
 	static constexpr unsigned int ScreenWidth = 600;
-	static constexpr unsigned int ScreenHeight = 800;
+	static constexpr unsigned int ScreenHeight = 400;
 	static constexpr unsigned int ActorDefaultSize = 64;
 
 	// Getter
